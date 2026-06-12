@@ -55,10 +55,27 @@
         .chat-scroll::-webkit-scrollbar-thumb:hover {
             background-color: rgba(156, 163, 175, 0.5);
         }
+
+        .chat-bubble-enter {
+            opacity: 0;
+            transform: translateY(12px) scale(0.98);
+            animation: chatBubbleIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes chatBubbleIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
     </style>
 </head>
 
-<body class="bg-dot-grid min-h-screen text-slate-200 flex flex-col justify-center items-center p-4">
+<body class="bg-dot-grid min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4">
 
   <div class="w-full max-w-3xl flex flex-col space-y-6 my-auto">
     <header class="w-full rounded-2xl border border-slate-800/60 bg-slate-900/80 px-5 py-4 shadow-lg backdrop-blur">
@@ -80,6 +97,10 @@
 
     <div id="chatContainer" class="w-full flex flex-col space-y-2">
     </div>
+  </div>
+
+  <div class="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-md backdrop-saturate-150">
+    Tap Anywhare
   </div>
 
   <script>
@@ -108,19 +129,17 @@
     ];
 
     const chatContainer = document.getElementById('chatContainer');
+    let messageIndex = 0;
 
-    textChat.forEach((message, index) => {
+    function createMessageElement(message, index) {
       const isUser = message.sender === 'iChat';
-      
-      // LOGIKA KUNCI: Cek apakah chat BERIKUTNYA dikirim oleh orang yang sama
       const nextMessage = textChat[index + 1];
       const isLastInGroup = !nextMessage || nextMessage.sender !== message.sender;
 
       const messageEl = document.createElement('div');
-      // items-end menjaga agar avatar tetap sejajar di bagian bawah bubble terakhir grup
-      messageEl.className = `flex items-end space-x-3 ${isUser ? 'justify-end' : ''} group select-none ${isLastInGroup ? 'mb-4' : ''}`;
+      messageEl.className = `flex items-end space-x-3 ${isUser ? 'justify-end' : ''} group select-none ${isLastInGroup ? 'mb-4' : ''} chat-bubble-enter`;
+      messageEl.style.animationDelay = `${index * 180}ms`;
 
-      // Penentuan border-radius bubble berdasarkan pengirim dan posisinya di dalam grup
       let bubbleClasses = '';
       if (isUser) {
         bubbleClasses = `bg-[#1e2640]/80 text-white rounded-2xl ${isLastInGroup ? 'rounded-br-none' : ''}`;
@@ -128,7 +147,6 @@
         bubbleClasses = `bg-emerald-600/90 border border-emerald-500/40 text-white rounded-2xl ${isLastInGroup ? 'rounded-bl-none' : ''}`;
       }
 
-      // Render HTML dengan komponen waktu berada DI DALAM elemen bubble chat
       messageEl.innerHTML = `
         ${!isUser ? `
           <div class="flex flex-col items-center space-y-1 w-9">
@@ -172,8 +190,24 @@
         ` : ''}
       `;
 
-      chatContainer.appendChild(messageEl);
+      return messageEl;
+    }
+
+    function renderNextMessage() {
+      if (messageIndex >= textChat.length) {
+        return;
+      }
+
+      const message = textChat[messageIndex];
+      chatContainer.appendChild(createMessageElement(message, messageIndex));
+      messageIndex += 1;
+    }
+
+    document.addEventListener('click', () => {
+      renderNextMessage();
     });
+
+    renderNextMessage();
 </script>
 
 </body>
