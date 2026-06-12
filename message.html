@@ -38,6 +38,14 @@
             background-size: 24px 24px;
         }
 
+        .bg-unlocked {
+            background-color: #0b0f19;
+            background-image: url('IMG_3001.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
         /* Custom scrollbar for chat container */
         .chat-scroll::-webkit-scrollbar {
             width: 6px;
@@ -62,6 +70,22 @@
             animation: chatBubbleIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
+        .typing-bubble {
+            animation: typingBubblePulse 1.2s ease-in-out infinite;
+        }
+
+        .typing-dot {
+            animation: typingDotBounce 1.2s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
         @keyframes chatBubbleIn {
             from {
                 opacity: 0;
@@ -72,13 +96,33 @@
                 transform: translateY(0) scale(1);
             }
         }
+
+        @keyframes typingDotBounce {
+            0%, 80%, 100% {
+                transform: translateY(0);
+                opacity: 0.55;
+            }
+            40% {
+                transform: translateY(-4px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes typingBubblePulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.01);
+            }
+        }
     </style>
 </head>
 
 <body class="bg-dot-grid min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4">
 
   <div class="w-full max-w-3xl flex flex-col space-y-6 my-auto">
-    <header class="w-full rounded-2xl border border-slate-800/60 bg-slate-900/80 px-5 py-4 shadow-lg backdrop-blur">
+    <header class="sticky top-2 z-50 w-full rounded-2xl border border-slate-800/60 bg-slate-900/80 px-5 py-4 shadow-lg backdrop-blur-sm">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-[#07b541] shadow-md">
@@ -99,37 +143,109 @@
     </div>
   </div>
 
-  <div class="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-md backdrop-saturate-150">
-    Tap Anywhare
+  <div id="passwordOverlay" class="fixed inset-0 z-[60] hidden items-center justify-center px-4 backdrop-blur-md">
+    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/95 p-5 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-white">Access Needed</h2>
+        <div class="rounded-full bg-red-500/10 px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-red-400">
+          Locked
+        </div>
+      </div>
+      <!-- <p class="mt-3 text-sm leading-6 text-slate-400">Tap the first chat to unlock the rest of the conversation.</p> -->
+      <form id="passwordForm" class="mt-4 space-y-3">
+        <input id="passwordInput" type="password" placeholder="Enter password" class="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-sm text-white outline-none ring-0 placeholder:text-slate-500 focus:border-emerald-500" />
+        <button type="submit" class="w-full rounded-xl bg-emerald-600 px-3 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-500">
+          Unlock
+        </button>
+      </form>
+      <p id="passwordNotice" class="mt-3 text-sm text-center text-red-500"></p>
+    </div>
+  </div>
+
+  <div id="footerPrompt" class="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-md backdrop-saturate-150">
+    Tap Anywhere
   </div>
 
   <script>
-    // Data chat tiruan untuk pengujian kelompok chat berturut-turut
     const textChat = [
       {
         sender: 'WA',
-        text: 'Hey there! Welcome to the BubbleCraft live studio. 👋 Say hello to start chatting!'
+        text: "Assalamu'alaikum, it's me iMen. Afwan, I just need sometime.",
+        time: '9:15 PM',
+        date: '12 Jun'
       },
       {
         sender: 'WA',
-        text: 'Ini adalah chat kedua berturut-turut dari WA, perhatikan logonya pindah ke bawah.'
+        text: "Alhamdulillah masih ingat akan hal itu dengan membuka acces pesan pribadi ini. Maaf, selalu mengganggu dan berisik aku cuma butuh waktu sebentar. ",
+        time: '10:00 PM',
+        date: '12 Jun'
       },
       {
         sender: 'iChat',
-        text: "Wow, this looks super clean! Let's test a few responses."
+        text: "Jika kamu ingin tidak tau atau tidak mendengar dan tidak perlu mengerti atau memahami tidak masalah. jika waktumu terlalu sibuk dan tidak ada waktu, aku hanya ingin butuh waktu.",
+        time: '10:17 PM',
+        date: '12 Jun'
       },
       {
         sender: 'iChat',
-        text: 'Ini chat kedua berturut-turut dari iChat. Logonya juga harus di paling bawah.'
+        text: "Aku tidak ingin mengganggumu, menyakitimu atau melukkaimu. hanya saja cukup banyak yang menghantuiku di saat itu. maaf bila kamu tidak faham atau.. uhmm saya juga tidak mengerti bagaiimana menjelaskannnya. Maafkan bila aku juga tidak bisa menjelaskan dengan baik. aku memangbanyak salah dan kekurangann kepadamu.",
+        time: '10:18 PM',
+        date: '12 Jun'
       },
       {
         sender: 'WA',
-        text: 'Awesome! Feel free to send messages or use the quick replies below. 🚀'
+        text: "Mungkin waktu aku terakhir berpesan untuk bertemu dengamu. akan kah kamu berkenan untuk bertemu?",
+        time: '10:19 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'WA',
+        text: "Karena aku juga inngin mennyelamatkan diriku senndiri atau kkesalah pahamann antara kita. karena aku juga kurang tau bagaiama berbicara maupun bercerita",
+        time: '10:19 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'WA',
+        text: "kitra semua sudah dewasa, kita juga paham untuk ruang bagi setiap orang dewasa. kita manusia juga punya banyak kesalahan oranng dewasa akan paham untuk mengatasinya yang terbaik bagi dirinnya dan orag lain.",
+        time: '10:20 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Sampai ketemu di hari esok Ahad, 10 pagi. di tempat awal dan akhir kita berdiskusi Sadji Cafe",
+        time: '10:20 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Jazzakumullah khairan katsiran, semoga kita semua selalu dalam lindungan Allah SWT. Aamiin.",
+        time: '10:20 PM',
+        date: '12 Jun'
       }
     ];
 
     const chatContainer = document.getElementById('chatContainer');
+    const passwordOverlay = document.getElementById('passwordOverlay');
+    const passwordForm = document.getElementById('passwordForm');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordNotice = document.getElementById('passwordNotice');
+    const footerPrompt = document.getElementById('footerPrompt');
     let messageIndex = 0;
+    let isUnlocked = false;
+    let hasCompleted = false; // has completed showing all messages
+
+    function showPasswordPrompt() {
+      passwordOverlay.classList.remove('hidden');
+      passwordOverlay.classList.add('flex');
+      passwordNotice.textContent = '';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+
+    function hidePasswordPrompt() {
+      passwordOverlay.classList.add('hidden');
+      passwordOverlay.classList.remove('flex');
+    }
 
     function createMessageElement(message, index) {
       const isUser = message.sender === 'iChat';
@@ -165,15 +281,14 @@
             </div>
             
             ${isUser ? `
-              <div class="flex items-center space-x-1 justify-end opacity-70">
-                <span class="text-[11px] font-medium text-blue-100">9:40 PM</span>
-                <svg class="h-3.5 w-3.5 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5M4.5 12.75l6 6 9-13.5" />
-                </svg>
+              <div class="flex w-full items-center justify-between gap-2 opacity-70">
+                <span class="text-[11px] font-medium text-white/90">${message.time || '9:40 PM'}</span>
+                <span class="text-[11px] font-medium text-white/70">${message.date || '12/06/2025'}</span>
               </div>
             ` : `
-              <div class="flex justify-start opacity-60">
-                <span class="text-[11px] font-medium text-slate-400">9:40 PM</span>
+              <div class="flex w-full items-center justify-between gap-2 opacity-60">
+                <span class="text-[11px] font-medium text-slate-900/80">${message.time || '9:40 PM'}</span>
+                <span class="text-[11px] font-medium text-slate-900/70">${message.date || '12/06/2025'}</span>
               </div>
             `}
           </div>
@@ -193,17 +308,81 @@
       return messageEl;
     }
 
+    function showTypingIndicator() {
+      const typingEl = document.createElement('div');
+      typingEl.className = 'flex items-end space-x-3 justify-end group select-none mb-4 chat-bubble-enter';
+      typingEl.innerHTML = `
+        <div class="flex max-w-[40%] flex-col items-end">
+          <div class="typing-bubble flex items-center gap-1.5 rounded-2xl rounded-br-none bg-[#1e2640]/80 px-4 py-3 shadow-lg">
+            <span class="typing-dot h-2.5 w-2.5 rounded-full bg-white/90"></span>
+            <span class="typing-dot h-2.5 w-2.5 rounded-full bg-white/90"></span>
+            <span class="typing-dot h-2.5 w-2.5 rounded-full bg-white/90"></span>
+          </div>
+        </div>
+        <div class="flex flex-col items-center space-y-1 w-9">
+          <div class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-900/30 bg-[#2c3875] text-xs font-medium text-blue-300 shadow-md">
+            iC
+          </div>
+        </div>
+      `;
+
+      chatContainer.appendChild(typingEl);
+    }
+
     function renderNextMessage() {
+      if (hasCompleted) {
+        return;
+      }
+
       if (messageIndex >= textChat.length) {
+        hasCompleted = true;
+        setTimeout(() => {
+          showTypingIndicator();
+          footerPrompt.textContent = 'Comingsoon';
+        }, 600);
         return;
       }
 
       const message = textChat[messageIndex];
       chatContainer.appendChild(createMessageElement(message, messageIndex));
       messageIndex += 1;
+
+      if (messageIndex >= textChat.length) {
+        hasCompleted = true;
+        setTimeout(() => {
+          showTypingIndicator();
+          footerPrompt.textContent = 'Comingsoon';
+        }, 600);
+      }
     }
 
-    document.addEventListener('click', () => {
+    passwordForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const enteredPassword = passwordInput.value.trim();
+
+      if (enteredPassword === 'sadji') {
+        isUnlocked = true;
+        document.body.classList.remove('bg-dot-grid');
+        document.body.classList.add('bg-unlocked');
+        hidePasswordPrompt();
+        renderNextMessage();
+      } else {
+        passwordNotice.textContent = "first date at '*****' cafe";
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      const clickedInsidePrompt = event.target.closest('#passwordOverlay') || event.target.closest('#passwordForm');
+
+      if (clickedInsidePrompt) {
+        return;
+      }
+
+      if (!isUnlocked) {
+        showPasswordPrompt();
+        return;
+      }
+
       renderNextMessage();
     });
 
