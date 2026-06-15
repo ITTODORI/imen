@@ -86,6 +86,23 @@
             animation-delay: 0.4s;
         }
 
+        /* Animasi huruf Comingsoon selaras dengan typing dot */
+        .typing-text-char {
+            display: inline-block;
+            animation: typingDotBounce 1.2s ease-in-out infinite;
+        }
+
+        .typing-text-char:nth-child(1) { animation-delay: 0.0s; }
+        .typing-text-char:nth-child(2) { animation-delay: 0.1s; }
+        .typing-text-char:nth-child(3) { animation-delay: 0.2s; }
+        .typing-text-char:nth-child(4) { animation-delay: 0.3s; }
+        .typing-text-char:nth-child(5) { animation-delay: 0.4s; }
+        .typing-text-char:nth-child(6) { animation-delay: 0.5s; }
+        .typing-text-char:nth-child(7) { animation-delay: 0.6s; }
+        .typing-text-char:nth-child(8) { animation-delay: 0.7s; }
+        .typing-text-char:nth-child(9) { animation-delay: 0.8s; }
+        .typing-text-char:nth-child(10) { animation-delay: 0.9s; }
+
         @keyframes chatBubbleIn {
             from {
                 opacity: 0;
@@ -151,7 +168,6 @@
           Locked
         </div>
       </div>
-      <!-- <p class="mt-3 text-sm leading-6 text-slate-400">Tap the first chat to unlock the rest of the conversation.</p> -->
       <form id="passwordForm" class="mt-4 space-y-3">
         <input id="passwordInput" type="password" placeholder="Enter password" class="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-sm text-white outline-none ring-0 placeholder:text-slate-500 focus:border-emerald-500" />
         <button type="submit" class="w-full rounded-xl bg-emerald-600 px-3 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-500">
@@ -232,7 +248,7 @@
     const footerPrompt = document.getElementById('footerPrompt');
     let messageIndex = 0;
     let isUnlocked = false;
-    let hasCompleted = false; // has completed showing all messages
+    let hasCompleted = false;
 
     function showPasswordPrompt() {
       passwordOverlay.classList.remove('hidden');
@@ -334,24 +350,49 @@
         return;
       }
 
+      const typingTextHTML = `
+        <span class="typing-text-char">C</span>
+        <span class="typing-text-char">o</span>
+        <span class="typing-text-char">m</span>
+        <span class="typing-text-char">i</span>
+        <span class="typing-text-char">n</span>
+        <span class="typing-text-char">g</span>
+        <span class="typing-text-char">s</span>
+        <span class="typing-text-char">o</span>
+        <span class="typing-text-char">o</span>
+        <span class="typing-text-char">n</span>
+      `;
+
       if (messageIndex >= textChat.length) {
         hasCompleted = true;
         setTimeout(() => {
           showTypingIndicator();
-          footerPrompt.textContent = 'Comingsoon';
+          footerPrompt.innerHTML = typingTextHTML;
+          setTimeout(() => {
+            chatContainer.lastChild?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          }, 100);
         }, 600);
         return;
       }
 
       const message = textChat[messageIndex];
-      chatContainer.appendChild(createMessageElement(message, messageIndex));
+      const messageElement = createMessageElement(message, messageIndex);
+      chatContainer.appendChild(messageElement);
+      
+      setTimeout(() => {
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }, 50);
+      
       messageIndex += 1;
 
       if (messageIndex >= textChat.length) {
         hasCompleted = true;
         setTimeout(() => {
           showTypingIndicator();
-          footerPrompt.textContent = 'Comingsoon';
+          footerPrompt.innerHTML = typingTextHTML;
+          setTimeout(() => {
+            chatContainer.lastChild?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          }, 100);
         }, 600);
       }
     }
@@ -365,6 +406,22 @@
         document.body.classList.remove('bg-dot-grid');
         document.body.classList.add('bg-unlocked');
         hidePasswordPrompt();
+        
+        (function playUnlockAudio() {
+          let audio = document.getElementById('unlockAudio');
+          if (!audio) {
+            audio = document.createElement('audio');
+            audio.id = 'unlockAudio';
+            audio.src = 'Message.mp3';
+            audio.loop = true;
+            audio.autoplay = true;
+            audio.volume = 0.5;
+            audio.setAttribute('playsinline', '');
+            document.body.appendChild(audio);
+          }
+          audio.play().catch(() => {});
+        })();
+
         renderNextMessage();
       } else {
         passwordNotice.textContent = "first date at '*****' cafe";
@@ -387,7 +444,7 @@
     });
 
     renderNextMessage();
-</script>
+  </script>
 
 </body>
 
