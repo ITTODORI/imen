@@ -38,12 +38,25 @@
             background-size: 24px 24px;
         }
 
+        /* Penyesuaian background utama */
         .bg-unlocked {
             background-color: #0b0f19;
             background-image: url('IMG_0111.jpeg');
             background-size: cover;
-            background-position: center;
+            background-position: center center;
             background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Optimasi khusus versi Mobile Portrait */
+        @media (max-width: 768px) {
+            .bg-unlocked {
+                background-position: center center;
+                background-size: cover;
+                min-height: 100vh;
+                /* Mengatasi masalah tinggi viewport pada browser mobile */
+                min-height: -webkit-fill-available; 
+            }
         }
 
         /* Custom scrollbar for chat container */
