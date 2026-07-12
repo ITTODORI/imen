@@ -30,49 +30,46 @@
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
+            position: relative;
+            min-height: 100vh;
+            /* Support for mobile browser address bars */
+            min-height: 100dvh; 
         }
 
-        .bg-dot-grid {
+        /* Use a pseudo-element for reliable, hardware-accelerated mobile backgrounds */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
             background-color: #0b0f19;
             background-image: radial-gradient(#1f293d 1.5px, transparent 1.5px);
             background-size: 24px 24px;
+            transition: background 0.5s ease-in-out;
         }
 
         @keyframes fadeBGswitch {
-            0% { opacity: 0; }
+            0% { opacity: 0.5; }
             100% { opacity: 1; }
         }
 
-        /* SwitchBG */
-        .bg-unlocked {
-            background-color: #0b0f19;
+        /* SwitchBG States applied via body classes targeting the pseudo-element */
+        body.bg-unlocked::before {
             background-image: url('IMG_0111.jpeg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            background-attachment: fixed;
         }
 
-        .bg-5jul {
-            background-color: #0b0f19;
+        body.bg-5jul::before {
             background-image: url('IMG_1966.jpg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            background-attachment: fixed;
-            animation: fadeBGswitch 5.0s ease-in-out;
-        }
-
-        /* Optimasi khusus versi Mobile Portrait */
-        @media (max-width: 768px) {
-            .bg-unlocked,
-            .bg-5jul {
-                background-position: center center;
-                background-size: cover;
-                min-height: 100vh;
-                /* Mengatasi masalah tinggi viewport pada browser mobile */
-                min-height: -webkit-fill-available; 
-            }
+            animation: fadeBGswitch 1.5s ease-in-out;
         }
 
         /* Custom scrollbar for chat container */
@@ -115,7 +112,7 @@
             animation-delay: 0.4s;
         }
 
-        /* Animasi huruf Comingsoon selaras dengan typing dot */
+        /* Coming Soon Motion */
         .typing-text-char {
             display: inline-block;
             animation: typingDotBounce 1.2s ease-in-out infinite;
@@ -165,7 +162,7 @@
     </style>
 </head>
 
-<body class="bg-dot-grid min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4">
+<body class="min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4">
 
   <div class="w-full max-w-3xl flex flex-col space-y-6 my-auto">
     <header class="sticky top-2 z-50 w-full rounded-2xl border border-slate-800/60 bg-slate-900/80 px-5 py-4 shadow-lg backdrop-blur-sm">
@@ -185,7 +182,7 @@
       </div>
     </header>
 
-    <div id="chatContainer" class="w-full flex flex-col space-y-2">
+    <div id="chatContainer" class="w-full flex flex-col space-y-2 mb-16">
     </div>
   </div>
 
@@ -419,7 +416,7 @@
         
         <div class="flex max-w-[80%] flex-col ${isUser ? 'items-end' : ''}">
           <div class="px-5 py-3 shadow-lg flex flex-col space-y-1.5 ${bubbleClasses}">
-            <div class="text-[15px] leading-relaxed">
+            <div class="text-[15px] leading-relaxed break-words">
               ${message.text}
             </div>
             
@@ -531,8 +528,6 @@
 
       if (enteredPassword === 'sadji') {
         isUnlocked = true;
-        document.body.classList.remove('bg-dot-grid');
-        document.body.classList.add('bg-unlocked');
         hidePasswordPrompt();
         
         (function playUnlockAudio() {
