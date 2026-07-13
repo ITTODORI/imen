@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BubbleCraft - Chat Bubble Sandbox</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -30,6 +30,8 @@
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
+            position: relative;
+            min-height: 100vh;
         }
 
         .bg-dot-grid {
@@ -43,36 +45,29 @@
             100% { opacity: 1; }
         }
 
-        /* SwitchBG */
-        .bg-unlocked {
-            background-color: #0b0f19;
+        /* Trik Menggunakan Pseudo-element untuk Menghindari Bug Zoom pada Mobile */
+        .bg-unlocked::before,
+        .bg-5jul::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
+        .bg-unlocked::before {
             background-image: url('IMG_0111.jpeg');
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
         }
 
-        .bg-5jul {
-            background-color: #0b0f19;
+        .bg-5jul::before {
             background-image: url('IMG_1966.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            animation: fadeBGswitch 5.0s ease-in-out;
-        }
-
-        /* Optimasi khusus versi Mobile Portrait */
-        @media (max-width: 768px) {
-            .bg-unlocked,
-            .bg-5jul {
-                background-position: center center;
-                background-size: cover;
-                min-height: 100vh;
-                /* Mengatasi masalah tinggi viewport pada browser mobile */
-                min-height: -webkit-fill-available; 
-            }
+            animation: fadeBGswitch 1.5s ease-in-out; /* Dipercepat sedikit agar transisi lebih smooth */
         }
 
         /* Custom scrollbar for chat container */
@@ -115,7 +110,6 @@
             animation-delay: 0.4s;
         }
 
-        /* Animasi huruf Comingsoon selaras dengan typing dot */
         .typing-text-char {
             display: inline-block;
             animation: typingDotBounce 1.2s ease-in-out infinite;
