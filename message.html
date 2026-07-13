@@ -27,22 +27,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        html {
+            min-height: 100%;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
             position: relative;
-            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
         }
 
         /* Default Dot Grid Background menggunakan pseudo-element */
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             z-index: -1;
+            min-height: 100dvh;
             background-color: #0b0f19;
             background-image: radial-gradient(#1f293d 1.5px, transparent 1.5px);
             background-size: 24px 24px;
@@ -57,11 +60,9 @@
         .bg-unlocked::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             z-index: -1;
+            min-height: 100dvh;
             background-color: #0b0f19;
             background-image: url('IMG_0111.jpeg');
             background-size: cover;
@@ -72,11 +73,9 @@
         .bg-5jul::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             z-index: -1;
+            min-height: 100dvh;
             background-color: #0b0f19;
             background-image: url('IMG_1966.jpg');
             background-size: cover;
@@ -90,8 +89,8 @@
             body::before,
             .bg-unlocked::before,
             .bg-5jul::before {
-                height: 100vh;
-                height: -webkit-fill-available; 
+                min-height: 100dvh;
+                height: 100dvh;
             }
         }
 
