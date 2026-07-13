@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BubbleCraft - Chat Bubble Sandbox</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -27,74 +27,55 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        html {
-            min-height: 100%;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
             position: relative;
-            min-height: 100dvh;
-            overflow-x: hidden;
+            min-height: 100vh;
+            min-height: 100dvh; 
         }
 
-        /* Default Dot Grid Background menggunakan pseudo-element */
         body::before {
             content: "";
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             z-index: -1;
-            min-height: 100dvh;
             background-color: #0b0f19;
-            /* background-image: radial-gradient(#1f293d 1.5px, transparent 1.5px);
-            background-size: 24px 24px; */
+            background-image: radial-gradient(#1f293d 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            transform: translate3d(0, 0, 0); /* stayImage on mobile */
+            -webkit-transform: translate3d(0, 0, 0);
+        }
+
+        /* switchBG */
+        body.bg-unlocked::before, body.bg-5jul::before {
+            transition: background-image 0.5s ease-in-out;
         }
 
         @keyframes fadeBGswitch {
-            0% { opacity: 0; }
+            0% { opacity: 0.5; }
             100% { opacity: 1; }
         }
 
-        /* SwitchBG via Pseudo-elements untuk menghindari bug zoom di Mobile */
-        .bg-unlocked::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            min-height: 100dvh;
-            background-color: #0b0f19;
+        body.bg-unlocked::before {
             background-image: url('IMG_0111.jpeg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
         }
 
-        .bg-5jul::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            min-height: 100dvh;
-            background-color: #0b0f19;
+        body.bg-5jul::before {
             background-image: url('IMG_1966.jpg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            animation: fadeBGswitch 1.5s ease-in-out; /* Disesuaikan ke 1.5s agar transisi terasa halus namun responsif */
+            animation: fadeBGswitch 1.5s ease-in-out;
         }
 
-        /* Optimasi khusus versi Mobile Portrait */
-        @media (max-width: 768px) {
-            body::before,
-            .bg-unlocked::before,
-            .bg-5jul::before {
-                min-height: 100dvh;
-                height: 100dvh;
-            }
-        }
-
-        /* Custom scrollbar for chat container */
+        /* Custom scrollbar untuk chat container */
         .chat-scroll::-webkit-scrollbar {
             width: 6px;
         }
@@ -134,7 +115,7 @@
             animation-delay: 0.4s;
         }
 
-        /* Animasi huruf Comingsoon selaras dengan typing dot */
+        /* Coming Soon Motion */
         .typing-text-char {
             display: inline-block;
             animation: typingDotBounce 1.2s ease-in-out infinite;
@@ -184,7 +165,8 @@
     </style>
 </head>
 
-<body class="min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4">
+<!-- PERBAIKAN: Menambahkan touch-manipulation untuk menghilangkan delay tap & mencegah gesture zoom tidak sengaja -->
+<body class="min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4 touch-manipulation">
 
   <div class="w-full max-w-3xl flex flex-col space-y-6 my-auto">
     <header class="sticky top-2 z-50 w-full rounded-2xl border border-slate-800/60 bg-slate-900/80 px-5 py-4 shadow-lg backdrop-blur-sm">
@@ -204,7 +186,7 @@
       </div>
     </header>
 
-    <div id="chatContainer" class="w-full flex flex-col space-y-2">
+    <div id="chatContainer" class="w-full flex flex-col space-y-2 mb-16">
     </div>
   </div>
 
@@ -438,7 +420,7 @@
         
         <div class="flex max-w-[80%] flex-col ${isUser ? 'items-end' : ''}">
           <div class="px-5 py-3 shadow-lg flex flex-col space-y-1.5 ${bubbleClasses}">
-            <div class="text-[15px] leading-relaxed">
+            <div class="text-[15px] leading-relaxed break-words">
               ${message.text}
             </div>
             
@@ -550,8 +532,6 @@
 
       if (enteredPassword === 'sadji') {
         isUnlocked = true;
-        // Tidak perlu menghapus bg-dot-grid secara manual karena tertutup oleh pseudo-element ::before baru
-        document.body.classList.add('bg-unlocked');
         hidePasswordPrompt();
         
         (function playUnlockAudio() {
