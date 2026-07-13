@@ -27,19 +27,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        html,
+        body {
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
-        }
-        body::before{
-          content: "";
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: -1;
-          transition: background-image 0.5s ease-in-out;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center center;
         }
 
         .bg-dot-grid {
@@ -54,22 +55,23 @@
         }
 
         /* SwitchBG */
-        .bg-unlocked {
+        .bg-unlocked,
+        .bg-5jul {
+            min-height: 100vh;
+            width: 100%;
             background-color: #0b0f19;
-            background-image: url('IMG_0111.jpeg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
 
+        .bg-unlocked {
+            background-image: url('IMG_0111.jpeg');
+        }
+
         .bg-5jul {
-            background-color: #0b0f19;
             background-image: url('IMG_1966.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             animation: fadeBGswitch 5.0s ease-in-out;
         }
 
@@ -125,7 +127,7 @@
             animation-delay: 0.4s;
         }
 
-        /* Commingsoon Motion */
+        /* Animasi huruf Comingsoon selaras dengan typing dot */
         .typing-text-char {
             display: inline-block;
             animation: typingDotBounce 1.2s ease-in-out infinite;
