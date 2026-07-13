@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- Mencegah auto-zoom browser mobile pada elemen input -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BubbleCraft - Chat Bubble Sandbox</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -31,24 +30,6 @@
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
-            min-height: 100vh;
-        }
-
-        /* Kontainer Latar Belakang Khusus - Anti-Zoom & Anti-Getar */
-        #bgWrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            /* Memaksa hardware acceleration agar background terkunci kokoh */
-            transform: translate3d(0, 0, 0);
-            -webkit-transform: translate3d(0, 0, 0);
         }
 
         .bg-dot-grid {
@@ -57,20 +38,41 @@
             background-size: 24px 24px;
         }
 
+        @keyframes fadeBGswitch {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* SwitchBG */
         .bg-unlocked {
             background-color: #0b0f19;
             background-image: url('IMG_0111.jpeg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .bg-5jul {
             background-color: #0b0f19;
             background-image: url('IMG_1966.jpg');
-            animation: fadeBGswitch 1.2s ease-in-out forwards;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            animation: fadeBGswitch 5.0s ease-in-out;
         }
 
-        @keyframes fadeBGswitch {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
+        /* Optimasi khusus versi Mobile Portrait */
+        @media (max-width: 768px) {
+            .bg-unlocked,
+            .bg-5jul {
+                background-position: center center;
+                background-size: cover;
+                min-height: 100vh;
+                /* Mengatasi masalah tinggi viewport pada browser mobile */
+                min-height: -webkit-fill-available; 
+            }
         }
 
         /* Custom scrollbar for chat container */
@@ -105,9 +107,15 @@
             animation: typingDotBounce 1.2s ease-in-out infinite;
         }
 
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
 
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Animasi huruf Comingsoon selaras dengan typing dot */
         .typing-text-char {
             display: inline-block;
             animation: typingDotBounce 1.2s ease-in-out infinite;
@@ -147,18 +155,19 @@
         }
 
         @keyframes typingBubblePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.01); }
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.01);
+            }
         }
     </style>
 </head>
 
-<body class="min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4">
+<body class="bg-dot-grid min-h-screen cursor-pointer text-slate-200 flex flex-col justify-center items-center p-4">
 
-  <!-- DIV KHUSUS BACKGROUND (Dipisah dari BODY agar kebal dari bug zoom mobile) -->
-  <div id="bgWrapper" class="bg-dot-grid"></div>
-
-  <div class="w-full max-w-3xl flex flex-col space-y-6 my-auto z-10">
+  <div class="w-full max-w-3xl flex flex-col space-y-6 my-auto">
     <header class="sticky top-2 z-50 w-full rounded-2xl border border-slate-800/60 bg-slate-900/80 px-5 py-4 shadow-lg backdrop-blur-sm">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
@@ -204,29 +213,144 @@
 
   <script>
     const textChat = [
-      { sender: 'WA', text: "Assalamu'alaikum, it's me iMen. Afwan, I just need sometime.", time: '9:15 PM', date: '12 Jun' },
-      { sender: 'WA', text: "Alhamdulillah masih ingat akan hal itu dengan membuka acces pesan pribadi ini. Maaf, selalu mengganggu dan berisik aku cuma butuh waktu sebentar. ", time: '10:00 PM', date: '12 Jun' },
-      { sender: 'iChat', text: "Jika kamu ingin tidak tau atau tidak mendengar dan tidak perlu mengerti atau memahami tidak masalah. jika waktumu terlalu sibuk dan tidak ada waktu, aku hanya ingin butuh waktu.", time: '10:17 PM', date: '12 Jun' },
-      { sender: 'iChat', text: "Aku tidak ingin mengganggumu, menyakitimu atau melukkaimu. hanya saja cukup banyak yang menghantuiku di saat itu. maaf bila kamu tidak faham atau.. uhmm saya juga tidak mengerti bagaiimana menjelaskannnya. Maafkan bila aku juga tidak bisa menjelaskan dengan baik. aku memangbanyak salah dan kekurangann kepadamu.", time: '10:18 PM', date: '12 Jun' },
-      { sender: 'WA', text: "Mungkin waktu aku terakhir berpesan untuk bertemu dengamu. akan kah kamu berkenan untuk bertemu?", time: '10:19 PM', date: '12 Jun' },
-      { sender: 'WA', text: "Karena aku juga inngin mennyelamatkan diriku senndiri atau kkesalah pahamann antara kita. karena aku juga kurang tau bagaiama berbicara maupun bercerita", time: '10:19 PM', date: '12 Jun' },
-      { sender: 'WA', text: "kitra semua sudah dewasa, kita juga paham untuk ruang bagi setiap orang dewasa. kita manusia juga punya banyak kesalahan oranng dewasa akan paham untuk mengatasinya yang terbaik bagi dirinnya dan orag lain.", time: '10:20 PM', date: '12 Jun' },
-      { sender: 'iChat', text: "Sampai ketemu di hari esok Ahad, 10 pagi. di tempat awal dan akhir kita berdiskusi Sadji Cafe", time: '10:20 PM', date: '12 Jun' },
-      { sender: 'iChat', text: "Jazzakumullah khairan katsiran, semoga kita semua selalu dalam lindungan Allah SWT. Aamiin.", time: '10:20 PM', date: '12 Jun' },
-      { sender: 'WA', text: "Maaf, jika saya berlebihan atau ceroboh dan kelalaian. saya, tidak lupa hanya saja sangat padat sekali berselih pekan ke pekan berikutnya tak ada waktu untuk metime.", time: '10:30 AM', date: '29 Jun' },
-      { sender: 'iChat', text: "Senang melihatmu kembali. semooga sehat dan bahagia selalu. selebihnya mohon maaf bila tingkah lakuku kurang berkenan terhadamu..", time: '14:30 AM', date: '30 Jun' },
-      { sender: 'iChat', text: "Bukannya aku merendahkanmu atau bencii terhadapmu, untuk mecontrrol diriku sendiri.. bukannya apa cuma berat untuk diriku, jujur aku juga ingin memandangmu. hanya reflek  diriku untuk mecontrol dirii sangat susah bahkan di depan teman, sesepuuh, ustadz dan orang sekitar. terlebih lagi masih ada tugas lain.", time: '14:30 AM', date: '30 Jun' },
-      { sender: 'iChat', text: "Sebenarnya tidak ada libur dan tidak izin kerja. cuma ku sempatkan saja, kirain bakal sebentar. qodarullah lah ya sering sekali bertemu dan ngobrol dengan ustadz, waktu keluar pondok pun sama. padahal setelah di walimahnya ipul mau geser ngopi sama yang lain sekalian ngobrol bentar. bukannya mau tergesa-gesa dan gelisah. Tenang dan Senang sih, dapat wejangan banyak dari sang guru mau gimana lagi harus nganter anak-anak darii Jogja ke Sukharjo. cuma selepas keluar ponndok tetep sama kondiisii harus ku kontrol juga hinhgga bisa tertidur, tidak susah hanya dalam diri memang berat dari dulu untuk mekontrol diri. sangat biasa bila seperti itu malemnya,, bahkan sempat panik krn ku kira kehilangan dompet sampai kehiilangan waktu untuk jemput anak-anak mau gak mau terlambat banget nganterin balek mereka maleman. maaf juga untuk di waktu malam diriku..", time: '02:00 AM', date: '1 Jul' },
-      { sender: 'iChat', text: "Alhamdulillah, terimakasih dan selebihnya mohon maaf✨🤲\u200D\u255A", time: '05:36 AM', date: '1 Jul' },
-      { sender: 'WA', text: "uhmm.. kali ini aku tak tau. hey theree someone idk, aku hanya ingin bercerita. hari terus berganti, dari pekan ke pekan lain, berganti bulan di tahun yang sangat menajubkan", time: '05:00 PM', date: '5 Jul' },
-      { sender: 'WA', text: "yep, bercampur aduk dan bertumpuk yang indah. masalah itu bukan masalah itu adalah hadiah. i'm fine, di hari yang sangat indah, bahagia, sedih, duka, luka. ku tak sadari ego yang ku daki ini tepat sekali riuh nya para pencinta alam tidak ada celah untuk kesepian ramai tapi sunyi. betul sekali indah belum tentu bahagia, ramai belum tentu nyaman. ternyata ada luka dan duka di hari yang sama.", time: '05:00 PM', date: '5 Jul' },
-      { sender: 'WA', text: "ketika egoku menguasai saat itu, ku qiblatkan kembali diriku. mbak alin seketika callme ku berharab kabar baik dari abangku, mbk alin, dan anak yatim lainnya yang udah janji mau berenang bareng ke umbul aku sudah usahakan demi untuk mereka wujudkan di klaten. ternyata di pertengahan jalan aku dengan yang lain untuk kepulangan lepas tektok Prau ternyata yang pulang sebenarnya adalah saudariku tersayang dan tercinta adek Ama walaupun sepupu, dia tetap adekku bahkan apapun keperluannya dan THR pun ku beri. aku merasa sia-sia ringPrau patakbanteng-wates-dieng-kali lembu aku tak pantas merayakan pencapaian ini. sesampai kontrakan adek hanya hampa dan kosong, secepat dan seketika itu tragedinya.", time: '05:01 PM', date: '5 Jul' },
-      { sender: 'WA', text: "Sabar dan tabah? justru aku sangat tenang seolah tidak terjadi apa-apa di luar, tidak untuk diri sebenarnya. senang dan bahagia kejadian waktu ke waktu, begtu banyak tadzkiroh bahkan sangat indah sekali rencana-Nya. pertama ku doakan yang terdalam untuk adek tersayangku Allahuma aghfirlaha wa arhamha wa fu'anha dan bertamasyalah di surga yang indah melebihi keindahan alam di dunia walaupun hanya sebatas ini kakak melihat keindahan dunia hanya kecil dii bandingkan di surga sana dek...", time: '05:11 PM', date: '5 Jul' },
-      { sender: 'WA', text: "ke dua adalah a tadzkiroh, apabila di posisinya? akankah siap, menerima, dan rela. kita hanya berusaha untuk ikhtiar semampu kita kepada-Nya. ingin dimudahkan rezekinya, Allah beri ujian. ingin di datangkan jodohnya tapi Allah mendahului jodohkan dengan kematian. semua akan indah dengan kebijakan Amal kita.. bukan perlombaan atau kompetisi, adil/curang itu perspektif masing-masing untuk meluaskan fikiran dan hati. kita tidak bisa memaksakan diri dan kepada orang lain untuk kita. tugas kita hanya saling mengingatkan, penilaian kita tidak selalu benar dan di terima oleh orang lain itu hak mereka. mereka bisa bahagia bersama dan sebaliknyua, kita tidak terlambat atau gagal, semua punya porsinya itu pasti, apakah mereka lebiih baik dari kita? belum tentu. semua masih rahasia begitu dengan kita apakah di depan kita bisa bahagia dengan kematian? atau mereka bisa bahagia dengan kehidupan baryu yang bahagia itu. yang lebih muda biisa lebih dahulu untuk kehidupan keluarga barunya atau kebahagiian dalam kematian.", time: '05:30 PM', date: '5 Jul' },
-      { sender: 'WA', text: "aku tidak menyalahkan diri ataupun teman atau adek kelas atau oranglain, indah sekali berbagai kejadian untuk pengingat. tdak jauh juga hari ku hadiri tadziyah anak ustad Anwar, DF yang  saya sendiri belum pernah bertemu reflek sama halnya alm. ust Aris ku memikul keranda saat di sholatkan dan di berangkatkan ke ambulance. pertama kali yang ku pikirkan adalah bukann siapakah alm anak ust. anwar ini atau alm ust. aris munandar, sedikit cerita ketika di rumah ternyata ust aris adalah teman dekat abi cerita dariii umi. dalam pikirku saat memikul keranda adalah pantaskah aku yang bernoda dan berdosa ini? bahkan aku tak pantas melihat diriku, aku takut dosaku perbuat.", time: '11:40 PM', date: '5 Jul' },
-      { sender: 'WA', text: "dari sini banyak hal yang belum pantas untuk apapun, aku berterimakasih atas kata-katamu memang benanr aku blum pantas dan siap untuk yang ku harapkan dan inginkan. dengan iitu aku jhanya tersentuh melihat setiap kebahagian dan keindahan oranglain dan bahkan teman kita sendiri. jujur bukan iri atau menyalahkan diri tapi itulah jalannya dari teman kita sendiri, begitu juga generasi muda atau adek kelas dengan kabahagiaannya.. semoga kamu selalu bahagia hingga jannnah bersamanya serta keberkahan dalamnya.", time: '11:45 PM', date: '5 Jul' },
-      { sender: 'WA', text: "jika oranglain mengatakan egois, aku salah, tdak salahjj kalau aku banyak kurangnya. bahkan dalam keluarga sendiri ada yang kurang perannya, tidak salah itu adalah kebenarannya. maaf berkali-kali ego terhadapku tinggi entah ego untuk metime, myself, atau apapun jika penilaian 'aku berubah' aku terima kalimat itu hanya saja aku cuma jujur untuk diriku, waktuku, kondisiku. bukannya tidak peduli atau lepas begitu saja, aku juga tidak bisa memaksakan atau memberi tau kalo aku butuh waktu atau baik--saja. jujur aku sangat berbohong terrhadap diriku. jujur sangat tidak bisa untuk mecontrol diri bahkan aku merasa bersalah lost control ku dengan hal kecil aku tidak tega juga menampar terhadap orglain menyiinggung terhadap kebahgian karena menurutku 'pentingnya memahami kondisi dan suasana' yep.. aku tdk bisa menyampaikan kalau aku sekeluarga sedang berduka dan luka. pesan ini aku mohon maaf untuk semua yang terlibat yang kurang berkenan", time: '10:15 PM', date: '6 Jul' },
-      { sender: 'WA', text: "maaf jika tidak rapi dan berantakan, hanya jujur terhadap kondisiku memang...", time: '00:05 PM', date: '7 Jul' }
+      {
+        sender: 'WA',
+        text: "Assalamu'alaikum, it's me iMen. Afwan, I just need sometime.",
+        time: '9:15 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'WA',
+        text: "Alhamdulillah masih ingat akan hal itu dengan membuka acces pesan pribadi ini. Maaf, selalu mengganggu dan berisik aku cuma butuh waktu sebentar. ",
+        time: '10:00 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Jika kamu ingin tidak tau atau tidak mendengar dan tidak perlu mengerti atau memahami tidak masalah. jika waktumu terlalu sibuk dan tidak ada waktu, aku hanya ingin butuh waktu.",
+        time: '10:17 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Aku tidak ingin mengganggumu, menyakitimu atau melukkaimu. hanya saja cukup banyak yang menghantuiku di saat itu. maaf bila kamu tidak faham atau.. uhmm saya juga tidak mengerti bagaiimana menjelaskannnya. Maafkan bila aku juga tidak bisa menjelaskan dengan baik. aku memangbanyak salah dan kekurangann kepadamu.",
+        time: '10:18 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'WA',
+        text: "Mungkin waktu aku terakhir berpesan untuk bertemu dengamu. akan kah kamu berkenan untuk bertemu?",
+        time: '10:19 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'WA',
+        text: "Karena aku juga inngin mennyelamatkan diriku senndiri atau kkesalah pahamann antara kita. karena aku juga kurang tau bagaiama berbicara maupun bercerita",
+        time: '10:19 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'WA',
+        text: "kitra semua sudah dewasa, kita juga paham untuk ruang bagi setiap orang dewasa. kita manusia juga punya banyak kesalahan oranng dewasa akan paham untuk mengatasinya yang terbaik bagi dirinnya dan orag lain.",
+        time: '10:20 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Sampai ketemu di hari esok Ahad, 10 pagi. di tempat awal dan akhir kita berdiskusi Sadji Cafe",
+        time: '10:20 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Jazzakumullah khairan katsiran, semoga kita semua selalu dalam lindungan Allah SWT. Aamiin.",
+        time: '10:20 PM',
+        date: '12 Jun'
+      },
+      {
+        sender: 'WA',
+        text: "Maaf, jika saya berlebihan atau ceroboh dan kelalaian. saya, tidak lupa hanya saja sangat padat sekali berselih pekan ke pekan berikutnya tak ada waktu untuk metime.",
+        time: '10:30 AM',
+        date: '29 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Senang melihatmu kembali. semooga sehat dan bahagia selalu. selebihnya mohon maaf bila tingkah lakuku kurang berkenan terhadamu..",
+        time: '14:30 AM',
+        date: '30 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Bukannya aku merendahkanmu atau bencii terhadapmu, untuk mecontrrol diriku sendiri.. bukannya apa cuma berat untuk diriku, jujur aku juga ingin memandangmu. hanya reflek  diriku untuk mecontrol dirii sangat susah bahkan di depan teman, sesepuuh, ustadz dan orang sekitar. terlebih lagi masih ada tugas lain.",
+        time: '14:30 AM',
+        date: '30 Jun'
+      },
+      {
+        sender: 'iChat',
+        text: "Sebenarnya tidak ada libur dan tidak izin kerja. cuma ku sempatkan saja, kirain bakal sebentar. qodarullah lah ya sering sekali bertemu dan ngobrol dengan ustadz, waktu keluar pondok pun sama. padahal setelah di walimahnya ipul mau geser ngopi sama yang lain sekalian ngobrol bentar. bukannya mau tergesa-gesa dan gelisah. Tenang dan Senang sih, dapat wejangan banyak dari sang guru mau gimana lagi harus nganter anak-anak darii Jogja ke Sukharjo. cuma selepas keluar ponndok tetep sama kondiisii harus ku kontrol juga hinhgga bisa tertidur, tidak susah hanya dalam diri memang berat dari dulu untuk mekontrol diri. sangat biasa bila seperti itu malemnya,, bahkan sempat panik krn ku kira kehilangan dompet sampai kehiilangan waktu untuk jemput anak-anak mau gak mau terlambat banget nganterin balek mereka maleman. maaf juga untuk di waktu malam diriku..",
+        time: '02:00 AM',
+        date: '1 Jul'
+      },
+      {
+        sender: 'iChat',
+        text: "Alhamdulillah, terimakasih dan selebihnya mohon maaf✨🤲🏻",
+        time: '05:36 AM',
+        date: '1 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "uhmm.. kali ini aku tak tau. hey theree someone idk, aku hanya ingin bercerita. hari terus berganti, dari pekan ke pekan lain, berganti bulan di tahun yang sangat menajubkan",
+        time: '05:00 PM',
+        date: '5 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "yep, bercampur aduk dan bertumpuk yang indah. masalah itu bukan masalah itu adalah hadiah. i'm fine, di hari yang sangat indah, bahagia, sedih, duka, luka. ku tak sadari ego yang ku daki ini tepat sekali riuh nya para pencinta alam tidak ada celah untuk kesepian ramai tapi sunyi. betul sekali indah belum tentu bahagia, ramai belum tentu nyaman. ternyata ada luka dan duka di hari yang sama.",
+        time: '05:00 PM',
+        date: '5 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "ketika egoku menguasai saat itu, ku qiblatkan kembali diriku. mbak alin seketika callme ku berharab kabar baik dari abangku, mbk alin, dan anak yatim lainnya yang udah janji mau berenang bareng ke umbul aku sudah usahakan demi untuk mereka wujudkan di klaten. ternyata di pertengahan jalan aku dengan yang lain untuk kepulangan lepas tektok Prau ternyata yang pulang sebenarnya adalah saudariku tersayang dan tercinta adek Ama walaupun sepupu, dia tetap adekku bahkan apapun keperluannya dan THR pun ku beri. aku merasa sia-sia ringPrau patakbanteng-wates-dieng-kali lembu aku tak pantas merayakan pencapaian ini. sesampai kontrakan adek hanya hampa dan kosong, secepat dan seketika itu tragedinya.",
+        time: '05:01 PM',
+        date: '5 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "Sabar dan tabah? justru aku sangat tenang seolah tidak terjadi apa-apa di luar, tidak untuk diri sebenarnya. senang dan bahagia kejadian waktu ke waktu, begtu banyak tadzkiroh bahkan sangat indah sekali rencana-Nya. pertama ku doakan yang terdalam untuk adek tersayangku Allahuma aghfirlaha wa arhamha wa fu'anha dan bertamasyalah di surga yang indah melebihi keindahan alam di dunia walaupun hanya sebatas ini kakak melihat keindahan dunia hanya kecil dii bandingkan di surga sana dek...",
+        time: '05:11 PM',
+        date: '5 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "ke dua adalah a tadzkiroh, apabila di posisinya? akankah siap, menerima, dan rela. kita hanya berusaha untuk ikhtiar semampu kita kepada-Nya. ingin dimudahkan rezekinya, Allah beri ujian. ingin di datangkan jodohnya tapi Allah mendahului jodohkan dengan kematian. semua akan indah dengan kebijakan Amal kita.. bukan perlombaan atau kompetisi, adil/curang itu perspektif masing-masing untuk meluaskan fikiran dan hati. kita tidak bisa memaksakan diri dan kepada orang lain untuk kita. tugas kita hanya saling mengingatkan, penilaian kita tidak selalu benar dan di terima oleh orang lain itu hak mereka. mereka bisa bahagia bersama dan sebaliknyua, kita tidak terlambat atau gagal, semua punya porsinya itu pasti, apakah mereka lebiih baik dari kita? belum tentu. semua masih rahasia begitu dengan kita apakah di depan kita bisa bahagia dengan kematian? atau mereka bisa bahagia dengan kehidupan baryu yang bahagia itu. yang lebih muda biisa lebih dahulu untuk kehidupan keluarga barunya atau kebahagiian dalam kematian.",
+        time: '05:30 PM',
+        date: '5 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "aku tidak menyalahkan diri ataupun teman atau adek kelas atau oranglain, indah sekali berbagai kejadian untuk pengingat. tdak jauh juga hari ku hadiri tadziyah anak ustad Anwar, DF yang  saya sendiri belum pernah bertemu reflek sama halnya alm. ust Aris ku memikul keranda saat di sholatkan dan di berangkatkan ke ambulance. pertama kali yang ku pikirkan adalah bukann siapakah alm anak ust. anwar ini atau alm ust. aris munandar, sedikit cerita ketika di rumah ternyata ust aris adalah teman dekat abi cerita dariii umi. dalam pikirku saat memikul keranda adalah pantaskah aku yang bernoda dan berdosa ini? bahkan aku tak pantas melihat diriku, aku takut dosaku perbuat.",
+        time: '11:40 PM',
+        date: '5 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "dari sini banyak hal yang belum pantas untuk apapun, aku berterimakasih atas kata-katamu memang benanr aku blum pantas dan siap untuk yang ku harapkan dan inginkan. dengan iitu aku jhanya tersentuh melihat setiap kebahagian dan keindahan oranglain dan bahkan teman kita sendiri. jujur bukan iri atau menyalahkan diri tapi itulah jalannya dari teman kita sendiri, begitu juga generasi muda atau adek kelas dengan kabahagiaannya.. semoga kamu selalu bahagia hingga jannnah bersamanya serta keberkahan dalamnya.",
+        time: '11:45 PM',
+        date: '5 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "jika oranglain mengatakan egois, aku salah, tdak salahjj kalau aku banyak kurangnya. bahkan dalam keluarga sendiri ada yang kurang perannya, tidak salah itu adalah kebenarannya. maaf berkali-kali ego terhadapku tinggi entah ego untuk metime, myself, atau apapun jika penilaian 'aku berubah' aku terima kalimat itu hanya saja aku cuma jujur untuk diriku, waktuku, kondisiku. bukannya tidak peduli atau lepas begitu saja, aku juga tidak bisa memaksakan atau memberi tau kalo aku butuh waktu atau baik-baik saja. jujur aku sangat berbohong terrhadap diriku. jujur sangat tidak bisa untuk mecontrol diri bahkan aku merasa bersalah lost control ku dengan hal kecil aku tidak tega juga menampar terhadap orglain menyiinggung terhadap kebahgian karena menurutku 'pentingnya memahami kondisi dan suasana' yep.. aku tdk bisa menyampaikan kalau aku sekeluarga sedang berduka dan luka. pesan ini aku mohon maaf untuk semua yang terlibat yang kurang berkenan",
+        time: '10:15 PM',
+        date: '6 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "maaf jika tidak rapi dan berantakan, hanya jujur terhadap kondisiku memang...",
+        time: '00:05 PM',
+        date: '7 Jul'
+      }
     ];
 
     const chatContainer = document.getElementById('chatContainer');
@@ -235,8 +359,6 @@
     const passwordInput = document.getElementById('passwordInput');
     const passwordNotice = document.getElementById('passwordNotice');
     const footerPrompt = document.getElementById('footerPrompt');
-    // Ambil elemen wrapper background baru
-    const bgWrapper = document.getElementById('bgWrapper'); 
     let messageIndex = 0;
     let isUnlocked = false;
     let hasCompleted = false;
@@ -254,19 +376,17 @@
       passwordOverlay.classList.remove('flex');
     }
 
-    // Fungsi dimodifikasi agar mengubah class di bgWrapper, bukan di body
     function applyBackgroundForMessage(message) {
-      bgWrapper.className = ''; 
+      document.body.classList.remove('bg-unlocked', 'bg-5jul');
 
       if (!isUnlocked) {
-        bgWrapper.classList.add('bg-dot-grid');
         return;
       }
 
       if (message?.date === '5 Jul') {
-        bgWrapper.classList.add('bg-5jul');
+        document.body.classList.add('bg-5jul');
       } else {
-        bgWrapper.classList.add('bg-unlocked');
+        document.body.classList.add('bg-unlocked');
       }
     }
 
@@ -353,7 +473,9 @@
     }
 
     function renderNextMessage() {
-      if (hasCompleted) return;
+      if (hasCompleted) {
+        return;
+      }
 
       const typingTextHTML = `
         <span class="typing-text-char">C</span>
@@ -409,8 +531,8 @@
 
       if (enteredPassword === 'sadji') {
         isUnlocked = true;
-        bgWrapper.className = '';
-        bgWrapper.classList.add('bg-unlocked');
+        document.body.classList.remove('bg-dot-grid');
+        document.body.classList.add('bg-unlocked');
         hidePasswordPrompt();
         
         (function playUnlockAudio() {
@@ -437,7 +559,9 @@
     document.addEventListener('click', (event) => {
       const clickedInsidePrompt = event.target.closest('#passwordOverlay') || event.target.closest('#passwordForm');
 
-      if (clickedInsidePrompt) return;
+      if (clickedInsidePrompt) {
+        return;
+      }
 
       if (!isUnlocked) {
         showPasswordPrompt();
@@ -451,4 +575,5 @@
   </script>
 
 </body>
+
 </html>
