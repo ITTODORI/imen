@@ -63,7 +63,6 @@
             animation: fadeBGswitch 5.0s ease-in-out;
         }
 
-        /* Optimasi khusus versi Mobile Portrait */
         @media (max-width: 768px) {
             .bg-unlocked,
             .bg-5jul {
@@ -74,7 +73,6 @@
             }
         }
 
-        /* Custom scrollbar for chat container */
         .chat-scroll::-webkit-scrollbar {
             width: 6px;
         }
@@ -114,7 +112,6 @@
             animation-delay: 0.4s;
         }
 
-        /* Animasi huruf Comingsoon selaras dengan typing dot */
         .typing-text-char {
             display: inline-block;
             animation: typingDotBounce 1.2s ease-in-out infinite;
@@ -207,7 +204,7 @@
     </div>
   </div>
 
-  <!-- Image Modal Pop-up (Diubah untuk menampilkan gambar langsung) -->
+  <!-- Image Modal Pop-up -->
   <div id="imageModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/85 p-4 backdrop-blur-md">
     <div class="relative max-w-lg w-full bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col items-center text-center space-y-4">
       <button id="closeModal" class="absolute top-3 right-3 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full h-8 w-8 flex items-center justify-center transition cursor-pointer z-10">
@@ -384,17 +381,33 @@
       },
       {
         sender: 'WA',
-        text: "20260726-1830.jpg",
+        text: "IMG_2402.heic",
         isImageButton: true,
-        imageLink: "https://photos.app.goo.gl/3Q8N2HQHcCvrYjW28",
+        imageLink: "https://lh3.googleusercontent.com/pw/AP1GczOkp5SeyODG6Yf7kzAL0LG3n1Z2yTXqgFJZX032KfMgq5tvCpBFnvXk0M9Y45cPuG4Vi04VgOuXeG5qKeTiovh-lnb13ji-RDMfjcojfawtQ8L33gHfKUmNpxSh1EY9W5pxXkmZf9UwG_TQxUQEsLyw=w606-h1078-s-no-gm?authuser=0",
         time: '18:30',
         date: '26 Jul'
       },
       {
         sender: 'WA',
-        text: "20260726-2030.jpg",
+        text: "BA80A556-29E6-480B-A873-8436FA3D47FC.JPG",
         isImageButton: true,
-        imageLink: "https://photos.app.goo.gl/U27VMjR5XgU9LGgf6",
+        imageLink: "https://lh3.googleusercontent.com/pw/AP1GczN_ATuYWqLYVgNXIAZPQjUp8Ac2AMlYdYjP-CdGMqJJJ8KF-vPRkCfeILY-hH5DkuviMoaxA3OwpvHs19CoCuGSbzbU2mVrSbVmJq4aw71iXTUHD_J1KCsdksxwErzvOpRBTLHsOOru7zVFiWphi17W=w606-h1078-s-no-gm?authuser=0",
+        time: '18:32',
+        date: '26 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "IMG_2407.heic",
+        isImageButton: true,
+        imageLink: "https://lh3.googleusercontent.com/pw/AP1GczOF25fQA1ep5sAabYqYbzKj6_ybpZXaLqc2eppiabojb61BzBLjuVADk1WHdYiJwLyWN9_S74F0_inIDlWCRxTXgikHApAxsDcIDY6A1GCfEWFwLiX2Uq9fum5272EWcST1-NPI33jNW3nSkaUJY_1y=w606-h1078-s-no-gm?authuser=0",
+        time: '18:34',
+        date: '26 Jul'
+      },
+      {
+        sender: 'WA',
+        text: "IMG_2427.heic",
+        isImageButton: true,
+        imageLink: "https://lh3.googleusercontent.com/pw/AP1GczPmafTZt6ewhdqkwSTg0kb-syf1YI0Tx7SAVKOjdNWZd0XNDsKYUn2sr9VPVh1CI6CFKUIB1hgPwjFGZ5QAVwSKEa36fLF-q2J7yfSgUktNcFNxapeltFm_KsBBiBaceoO84JpdiNbQtX58oHGD_amC=w606-h1078-s-no-gm?authuser=0",
         time: '18:35',
         date: '26 Jul'
       },
@@ -407,7 +420,6 @@
     const passwordNotice = document.getElementById('passwordNotice');
     const footerPrompt = document.getElementById('footerPrompt');
 
-    // Elemen Modal Pop-up Gambar
     const imageModal = document.getElementById('imageModal');
     const closeModal = document.getElementById('closeModal');
     const modalImage = document.getElementById('modalImage');
@@ -523,7 +535,6 @@
       return messageEl;
     }
 
-    // Function Image POP-UP
     function openImageModal(link, title) {
       modalTitle.textContent = title;
       modalImage.src = link;
@@ -632,7 +643,7 @@
         (function playUnlockAudio() {
           let audio = document.getElementById('unlockAudio');
           if (!audio) {
-            audio = document.getElementById('unlockAudio') || document.createElement('audio');
+            audio = document.createElement('audio');
             audio.id = 'unlockAudio';
             audio.src = 'Message.mp3';
             audio.loop = true;
