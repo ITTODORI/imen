@@ -213,12 +213,11 @@
 
       <div class="flex items-center space-x-2 text-emerald-400 font-medium text-sm">
         <i class="fa-solid fa-camera-retro"></i>
-        <span id="modalTitle">Preview Gambar</span>
+        <span id="modalTitle">Preview Media</span>
       </div>
 
-      <!-- Container Gambar Langsung -->
-      <div class="w-full overflow-hidden rounded-xl bg-slate-950 flex items-center justify-center max-h-[70vh]">
-        <img id="modalImage" src="" alt="Preview" class="object-contain max-h-[65vh] w-full rounded-lg" />
+      <!-- Container Dinamis Gambar / Video -->
+      <div id="modalContentContainer" class="w-full overflow-hidden rounded-xl bg-slate-950 flex items-center justify-center max-h-[70vh]">
       </div>
     </div>
   </div>
@@ -417,6 +416,20 @@
         time: '18:35',
         date: '26 Jul'
       },
+      {
+        sender: 'iChat',
+        text: "Alhamdulillah, Ahdi mawfiyy.. sampai puncak mongkrang hanya sebentar lalu turun kembali. terasa biasa saja, mungkin karena sudah keseringan. it's oke, niatnya mau ring sampai mitis tetapi tidak boleh lintas karena rule baru setelah tragedi. but, so peacfull sih.. dan cukup",
+        time:'10:13',
+        date: '1 Sep'
+      },
+      {
+        sender: 'iChat',
+        text: "01-09-2026_09-00.mov",
+        isImageButton: true,
+        imageLink: "https://photos.app.goo.gl/LabArSoMwkJBS74f7",
+        time: '10:15',
+        date: '1 Sep'
+      },
     ];
 
     const chatContainer = document.getElementById('chatContainer');
@@ -428,7 +441,7 @@
 
     const imageModal = document.getElementById('imageModal');
     const closeModal = document.getElementById('closeModal');
-    const modalImage = document.getElementById('modalImage');
+    const modalContentContainer = document.getElementById('modalContentContainer');
     const modalTitle = document.getElementById('modalTitle');
 
     let messageIndex = 0;
@@ -482,15 +495,20 @@
       if (message.isImageButton) {
         const safeLink = message.imageLink.replace(/'/g, "\\'");
         const safeText = message.text.replace(/'/g, "\\'");
+        const isVideo = message.text.endsWith('.mov') || message.text.endsWith('.mp4');
+        const iconClass = isVideo ? 'fa-solid fa-video' : 'fa-regular fa-image';
+        const buttonLabel = isVideo ? 'Lihat Video' : 'Lihat Gambar';
+
+        // Menggunakan <button> alih-alih <a> agar memicu pop-up modal lokal
         contentBody = `
           <div class="flex flex-col space-y-2">
             <div class="text-[15px] leading-relaxed flex items-center gap-2">
-              <i class="fa-regular fa-image text-lg"></i>
+              <i class="${iconClass} text-lg"></i>
               <span>${message.text}</span>
             </div>
-            <button onclick="openImageModal('${safeLink}', '${safeText}')" 
+            <button type="button" onclick="openMediaModal('${safeLink}', '${safeText}', ${isVideo})" 
                class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700/80 hover:bg-emerald-600 px-3 py-2 text-xs font-medium text-white transition shadow cursor-pointer">
-               <i class="fa-solid fa-eye"></i> Lihat Gambar
+               <i class="fa-solid fa-eye"></i> ${buttonLabel}
             </button>
           </div>
         `;
@@ -541,24 +559,41 @@
       return messageEl;
     }
 
-    function openImageModal(link, title) {
+    function openMediaModal(link, title, isVideo) {
       modalTitle.textContent = title;
-      modalImage.src = link;
+      modalContentContainer.innerHTML = ''; // Bersihkan konten sebelumnya
+
+      if (isVideo) {
+        // Video tag HTML5
+        const videoEl = document.createElement('video');
+        videoEl.src = link;
+        videoEl.controls = true; 
+        videoEl.className = 'max-h-[65vh] w-full rounded-lg object-contain';
+        modalContentContainer.appendChild(videoEl);
+      } else {
+        // Image
+        const imgEl = document.createElement('img');
+        imgEl.src = link;
+        imgEl.alt = title;
+        imgEl.className = 'object-contain max-h-[65vh] w-full rounded-lg';
+        modalContentContainer.appendChild(imgEl);
+      }
+
       imageModal.classList.remove('hidden');
       imageModal.classList.add('flex');
     }
 
-    closeModal.addEventListener('click', () => {
+    function closeModalHandler() {
       imageModal.classList.add('hidden');
       imageModal.classList.remove('flex');
-      modalImage.src = '';
-    });
+      modalContentContainer.innerHTML = ''; // Hentikan pemutaran video saat ditutup
+    }
+
+    closeModal.addEventListener('click', closeModalHandler);
 
     imageModal.addEventListener('click', (e) => {
       if (e.target === imageModal) {
-        imageModal.classList.add('hidden');
-        imageModal.classList.remove('flex');
-        modalImage.src = '';
+        closeModalHandler();
       }
     });
 
