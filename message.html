@@ -227,6 +227,45 @@
   </div>
 
   <script>
+    const chatContainer = document.getElementById('chatContainer');
+    const passwordOverlay = document.getElementById('passwordOverlay');
+    const passwordForm = document.getElementById('passwordForm');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordNotice = document.getElementById('passwordNotice');
+    const footerPrompt = document.getElementById('footerPrompt');
+
+    const imageModal = document.getElementById('imageModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalContentContainer = document.getElementById('modalContentContainer');
+    const modalTitle = document.getElementById('modalTitle');
+
+    let messageIndex = 0;
+    let isUnlocked = false;
+    let hasCompleted = false;
+
+    function openMediaModal(link, title, isVideo) {
+      if (modalTitle) modalTitle.textContent = title;
+      modalContentContainer.innerHTML = '';
+
+      if (isVideo) {
+        const videoEl = document.createElement('video');
+        videoEl.src = link;
+        videoEl.controls = true; 
+        videoEl.autoplay = true;
+        videoEl.className = 'w-full max-h-[85vh] object-contain block';
+        modalContentContainer.appendChild(videoEl);
+      } else {
+        const imgEl = document.createElement('img');
+        imgEl.src = link;
+        imgEl.alt = title;
+        imgEl.className = 'w-full max-h-[85vh] object-cover block';
+        modalContentContainer.appendChild(imgEl);
+      }
+
+      imageModal.classList.remove('hidden');
+      imageModal.classList.add('flex');
+    }
+
     const textChat = [
       {
         sender: 'WA',
@@ -514,22 +553,6 @@
       },
     ];
 
-    const chatContainer = document.getElementById('chatContainer');
-    const passwordOverlay = document.getElementById('passwordOverlay');
-    const passwordForm = document.getElementById('passwordForm');
-    const passwordInput = document.getElementById('passwordInput');
-    const passwordNotice = document.getElementById('passwordNotice');
-    const footerPrompt = document.getElementById('footerPrompt');
-
-    const imageModal = document.getElementById('imageModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalContentContainer = document.getElementById('modalContentContainer');
-    const modalTitle = document.getElementById('modalTitle');
-
-    let messageIndex = 0;
-    let isUnlocked = false;
-    let hasCompleted = false;
-
     function showPasswordPrompt() {
       passwordOverlay.classList.remove('hidden');
       passwordOverlay.classList.add('flex');
@@ -639,29 +662,6 @@
       `;
 
       return messageEl;
-    }
-
-    function openMediaModal(link, title, isVideo) {
-      if (modalTitle) modalTitle.textContent = title;
-      modalContentContainer.innerHTML = '';
-
-      if (isVideo) {
-        const videoEl = document.createElement('video');
-        videoEl.src = link;
-        videoEl.controls = true; 
-        videoEl.autoplay = true;
-        videoEl.className = 'w-full max-h-[85vh] object-contain block';
-        modalContentContainer.appendChild(videoEl);
-      } else {
-        const imgEl = document.createElement('img');
-        imgEl.src = link;
-        imgEl.alt = title;
-        imgEl.className = 'w-full max-h-[85vh] object-cover block';
-        modalContentContainer.appendChild(imgEl);
-      }
-
-      imageModal.classList.remove('hidden');
-      imageModal.classList.add('flex');
     }
 
     function closeModalHandler() {
