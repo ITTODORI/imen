@@ -245,9 +245,17 @@
 
     function formatMessageText(text) {
       if (!text) return '';
-      let formatted = text.replace(/_([^_]+)_/g, '<em>$1</em>'); // Italic Text
-      formatted = formatted.replace(/\*([^*]+)\*/g, '<strong>$1</strong>'); // Bold Text
-      return formatted;
+      let formatted = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      formatted = formatted.replace(/\*(.*?)\*/g, '<strong>$1</strong>'); // Bold
+      formatted = formatted.replace(/_(.*?)_/g, '<em>$1</em>'); // Italic
+      formatted = formatted.replace(/~(.*?)~/g, '<del>$1</del>'); // Strikethrough
+      formatted = formatted.replace(/\n/g, '<br>'); // Newline
+      
+      return formatted; 
     }
 
     function openMediaModal(link, title, isVideo) {
@@ -611,7 +619,6 @@
         const iconClass = isVideo ? 'fa-solid fa-video' : 'fa-regular fa-image';
         const buttonLabel = isVideo ? 'Lihat Video' : 'Lihat Gambar';
 
-        // Menggunakan <button> alih-alih <a> agar memicu pop-up modal lokal
         contentBody = `
           <div class="flex flex-col space-y-2">
             <div class="text-[15px] leading-relaxed flex items-center gap-2">
@@ -625,7 +632,7 @@
           </div>
         `;
       } else {
-        contentBody = `<div class="text-[15px] leading-relaxed">${message.text}</div>`;
+        contentBody = `<div class="text-[15px] leading-relaxed">${formatMessageText(message.text)}</div>`;
       }
 
       messageEl.innerHTML = `
