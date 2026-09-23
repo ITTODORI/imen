@@ -243,6 +243,13 @@
     let isUnlocked = false;
     let hasCompleted = false;
 
+    function formatMessageText(text) {
+      if (!text) return '';
+      let formatted = text.replace(/_([^_]+)_/g, '<em>$1</em>'); // Italic Text
+      formatted = formatted.replace(/\*([^*]+)\*/g, '<strong>$1</strong>'); // Bold Text
+      return formatted;
+    }
+
     function openMediaModal(link, title, isVideo) {
       if (modalTitle) modalTitle.textContent = title;
       modalContentContainer.innerHTML = '';
@@ -535,7 +542,7 @@
       },
       {
         sender: 'WA',
-        text: "sebenarnya hari minggu setelah Walimah gus ma'ruf mau pulang ke purwodadi. kendala seketika menimpa setelah nongkrong bersama shohib dan ngopi sama fais-askar di Legi Pait, karena tak paling enak dan fresh itu bukan soal ramai atau sepi kata ku ke faiz tapi tempat yang fresh dan segar di outdoor ada pohon bringin namanya juga anak pecinta alam. rekom banget gass yu kesana, kenapa saran ke outdoor mungkin kebiasa di Sukoharjo banyak yang gtu wkwkw..  hitung-hitung untuk menyegarkan askar karena 2bln lalu mbaknya kecelakan dan itu sangat menyakitkan, aku aja juga kaget dan gak tega. aku berpesan kepada adek-adeku untuk menjaga mereka entah kandung/sepupu klo keluar atau jalan paling tidak izin ke ortu walaupun sesuatu privasi atau canggung paling tidak cerita ke saudara untuk menjaga kerahasian walaupun itu gak di sarankan sih harus jujur, ya bukan memihak siapa tapi saya berusaha memahmi anak muda walaupun diri belum pernah hehe..aku berusaha terbaik ya walaupun di nilai kekanakan aku ingin tertawa bahagia tanpa memikirkan kerumitan. jalan-jalan, traktirin jajan, kesukan bocil pasti datang ke rumah nenek minta es krim biasanya si nuha salam kedatangannya adalah gajuli (tendang) klo aisy mukul punggung, alasan mereka kan kakak sering GYM dadi atos T_T",
+        text: "sebenarnya hari minggu setelah Walimah gus ma'ruf mau pulang ke purwodadi. kendala seketika menimpa setelah nongkrong bersama shohib dan ngopi sama fais-askar di Legi Pait, karena tak paling enak dan fresh itu bukan soal ramai atau sepi kata ku ke faiz tapi tempat yang fresh dan segar di outdoor ada pohon bringin namanya juga anak pecinta alam. rekom banget gass yu kesana, kenapa saran ke outdoor mungkin kebiasa di Sukoharjo banyak yang gtu wkwkw..  hitung-hitung untuk menyegarkan askar karena 2bln lalu mbaknya kecelakan dan itu sangat menyakitkan, aku aja juga kaget dan gak tega. aku berpesan kepada adek-adeku untuk menjaga mereka entah kandung/sepupu klo keluar atau jalan paling tidak izin ke ortu walaupun sesuatu privasi atau canggung paling tidak cerita ke saudara untuk menjaga kerahasian walaupun itu gak di sarankan sih harus jujur, ya bukan memihak siapa tapi saya berusaha memahmi anak muda walaupun diri belum pernah hehe..aku berusaha terbaik ya walaupun di nilai kekanakan aku ingin tertawa bahagia tanpa memikirkan kerumitan. jalan-jalan, traktirin jajan, kesukan bocil pasti datang ke rumah nenek minta es krim biasanya si nuha salam kedatangannya adalah gajuli (tendang) klo aisy mukul punggung, alasan mereka _'kan kakak sering GYM dadi atos'_ T_T",
         time: '01:15',
         date: '21 Sep'
       },
