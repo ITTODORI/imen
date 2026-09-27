@@ -681,7 +681,7 @@
     function closeModalHandler() {
       imageModal.classList.add('hidden');
       imageModal.classList.remove('flex');
-      modalContentContainer.innerHTML = ''; // Hentikan pemutaran video saat ditutup
+      modalContentContainer.innerHTML = ''; // stop-close video
     }
 
     closeModal.addEventListener('click', closeModalHandler);
